@@ -160,25 +160,4 @@
                 return 'PDO exception: ' . $e->getMessage();
             }
         }
-        // 注目するユーザーの投稿したものの詳細を1件ずつ取得
-        public function post_extract(){
-            try {
-                $pdo = self::get_connection();
-                $stmt = $pdo->prepare("SELECT * FROM posts WHERE user_id=1 AND id=:id");
-                // バインド処理
-                $stmt->bindParam(':user_id', $this->id, PDO::PARAM_INT);
-                $stmt->bindParam(':id', $this->id, PDO::PARAM_INT);
-                // 実行
-                $stmt->execute();
-                // フェッチの結果を、Postクラスのインスタンスにマッピングする
-                $stmt->setFetchMode(PDO::FETCH_CLASS|PDO::FETCH_PROPS_LATE, 'Post');
-                $posts = $stmt->fetch();
-                self::close_connection($pdo, $stmt);
-                // Postクラスのインスタンスを返す
-                return $posts;
-                
-            } catch (PDOException $e) {
-                return 'PDO exception: ' . $e->getMessage();
-            }
-        }
     }
